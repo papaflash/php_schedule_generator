@@ -3,10 +3,16 @@ declare(strict_types=1);
 
 setlocale(LC_TIME, 'ru_RU.UTF-8');
 
-generateShedule('10', '24');
+echo 'Для расчета графика введите год: ';
+$year = fgets(STDIN);
+echo 'Введите номер месяца: ';
+$month = fgets(STDIN);
+echo 'Кол-во месяцев взятых в расчет(можно пропустить нажав Enter): ';
+$countMonths = fgets(STDIN);
+generateShedule($month, $year, $countMonths);
 
 
-function generateShedule(string $month, string $year, int $countMonths = 1): void
+function generateShedule(string $month, string $year, string $countMonths = '1'): void
 {
     try{
         $dateString = "$year-$month-01";
@@ -47,7 +53,7 @@ function calculateShedule(DateTime $sourceDate): void
         $daysInMonth[] = "\033[31m" . $dayFormatter->format($firstDay) . "\033[0m";
         $firstDay->modify('+1 day');
     }
-    echo 'Расчет для: ' . "\033[32m" . $monthFormatter->format($sourceDate) . "\033[0m" . PHP_EOL;
+    echo "\033[32m" . $monthFormatter->format($sourceDate) . "\033[0m" . PHP_EOL;
     setWorkingDays($daysInMonth);
     showShedule($daysInMonth);
 }
