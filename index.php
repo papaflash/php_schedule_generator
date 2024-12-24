@@ -84,16 +84,23 @@ function setMonthsDays(DateTime $sourceDate, string $countMonths): void
 function setWorkingDays(array &$months): void
 {
     define("WORKED_DAY_STEP", 3);
-    foreach ($months as &$month) {
-        for($i = 0, $countDays = count($month); $i < $countDays; $i += WORKED_DAY_STEP){
-            if(isWeekend($month[$i])) {
-                while (isWeekend($month[$i])) {
-                    $i++;
+        foreach ($months as &$days) {
+            $isLastDay = false;
+            for($i = 0, $countDays = count($days); $i < $countDays; $i += WORKED_DAY_STEP){
+                if(isWeekend($days[$i])) {
+                    while (isWeekend($days[$i])) {
+                        $i++;
+                        if($i >= $countDays){
+                            $isLastDay = true;
+                            break;
+                        }
+                    }
+                }
+                if(!$isLastDay){
+                    $days[$i] = preg_replace('/\033\[[0-9;]*m/', '', $days[$i]);
                 }
             }
-            $month[$i] = preg_replace('/\033\[[0-9;]*m/', '', $month[$i]);
         }
-    }
 }
 
 //Проверка на выходной дней
@@ -124,5 +131,4 @@ function showShedule(array $months): void
         }
         echo PHP_EOL;
     }
-
 }
